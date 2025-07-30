@@ -14,7 +14,149 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      blood_requests: {
+        Row: {
+          additional_notes: string | null
+          blood_group: string
+          contact_phone: string
+          created_at: string
+          hospital_address: string
+          hospital_name: string
+          id: string
+          latitude: number | null
+          longitude: number | null
+          needed_by: string
+          recipient_id: string
+          status: string
+          units_needed: number
+          updated_at: string
+          urgency: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          blood_group: string
+          contact_phone: string
+          created_at?: string
+          hospital_address: string
+          hospital_name: string
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          needed_by: string
+          recipient_id: string
+          status?: string
+          units_needed?: number
+          updated_at?: string
+          urgency: string
+        }
+        Update: {
+          additional_notes?: string | null
+          blood_group?: string
+          contact_phone?: string
+          created_at?: string
+          hospital_address?: string
+          hospital_name?: string
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          needed_by?: string
+          recipient_id?: string
+          status?: string
+          units_needed?: number
+          updated_at?: string
+          urgency?: string
+        }
+        Relationships: []
+      }
+      donations: {
+        Row: {
+          created_at: string
+          donation_date: string | null
+          donor_id: string
+          id: string
+          notes: string | null
+          request_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          donation_date?: string | null
+          donor_id: string
+          id?: string
+          notes?: string | null
+          request_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          donation_date?: string | null
+          donor_id?: string
+          id?: string
+          notes?: string | null
+          request_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "donations_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "blood_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          blood_group: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          is_available: boolean | null
+          latitude: number | null
+          location: string | null
+          longitude: number | null
+          phone: string | null
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          blood_group?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          is_available?: boolean | null
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          phone?: string | null
+          role: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          blood_group?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          is_available?: boolean | null
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          phone?: string | null
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
