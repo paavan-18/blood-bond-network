@@ -1,177 +1,150 @@
-import { useState } from 'react'
-import { SignIn, SignUp } from '@clerk/clerk-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Droplet, Heart, Users, UserCheck } from 'lucide-react'
+import React, { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Heart, Mail, Lock, User } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface AuthPageProps {
-  isSignUp?: boolean
+  isSignUp: boolean;
 }
 
-const AuthPage = ({ isSignUp = false }: AuthPageProps) => {
-  const [showRoleSelection, setShowRoleSelection] = useState(false)
-  const [selectedRole, setSelectedRole] = useState<'donor' | 'recipient' | 'admin' | null>(null)
+export default function AuthPage({ isSignUp }: AuthPageProps) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { signIn, signUp } = useAuth();
+  const { toast } = useToast();
 
-  const roles = [
-    {
-      id: 'donor' as const,
-      title: 'Blood Donor',
-      description: 'I want to donate blood and help save lives',
-      icon: Heart,
-      color: 'bg-medical-red/10 border-medical-red/20'
-    },
-    {
-      id: 'recipient' as const,
-      title: 'Blood Recipient',
-      description: 'I need blood or am seeking donors',
-      icon: Users,
-      color: 'bg-medical-trust/10 border-medical-trust/20'
-    },
-    {
-      id: 'admin' as const,
-      title: 'Healthcare Admin',
-      description: 'I manage blood donation programs',
-      icon: UserCheck,
-      color: 'bg-medical-success/10 border-medical-success/20'
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      if (isSignUp) {
+        await signUp(email, password, { full_name: fullName });
+        toast({
+          title: "Account created!",
+          description: "Please check your email to verify your account.",
+        });
+      } else {
+        await signIn(email, password);
+        toast({
+          title: "Welcome back!",
+          description: "You have successfully signed in.",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "An error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
-  ]
-
-  if (isSignUp && !showRoleSelection) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="w-full max-w-4xl">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="bg-primary/10 p-3 rounded-full">
-                <Droplet className="h-8 w-8 text-primary" />
-              </div>
-            </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">Join LifeLink</h1>
-            <p className="text-muted-foreground">Choose your role to get started</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {roles.map((role) => (
-              <Card 
-                key={role.id}
-                className={`cursor-pointer transition-all duration-300 hover:shadow-medical hover:scale-105 border-2 ${
-                  selectedRole === role.id 
-                    ? 'border-primary bg-primary/5' 
-                    : 'border-border hover:border-primary/30'
-                } ${role.color}`}
-                onClick={() => {
-                  setSelectedRole(role.id)
-                  setShowRoleSelection(true)
-                }}
-              >
-                <CardHeader className="text-center">
-                  <div className="bg-background rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-soft">
-                    <role.icon className="h-8 w-8 text-primary" />
-                  </div>
-                  <CardTitle className="text-xl">{role.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-center">
-                    {role.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <p className="text-muted-foreground">
-              Already have an account?{' '}
-              <a href="/login" className="text-primary hover:underline font-medium">
-                Sign in here
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="bg-primary/10 p-3 rounded-full">
-              <Droplet className="h-8 w-8 text-primary" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-medical-red/5 via-background to-medical-red/10 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-1 text-center">
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <Heart className="h-8 w-8 text-medical-red" />
+            <h1 className="text-2xl font-bold text-medical-red">LifeLink</h1>
+          </div>
+          <CardTitle className="text-2xl">
+            {isSignUp ? 'Create an account' : 'Welcome back'}
+          </CardTitle>
+          <CardDescription>
+            {isSignUp 
+              ? 'Enter your details to create your account' 
+              : 'Enter your credentials to access your account'
+            }
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {isSignUp && (
+              <div className="space-y-2">
+                <Label htmlFor="fullName">Full Name</Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="fullName"
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="pl-9"
+                    required
+                  />
+                </div>
+              </div>
+            )}
+            
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="pl-9"
+                  required
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pl-9"
+                  required
+                />
+              </div>
+            </div>
+
+            <Button 
+              type="submit" 
+              className="w-full bg-gradient-medical hover:bg-gradient-medical-hover"
+              disabled={loading}
+            >
+              {loading 
+                ? (isSignUp ? 'Creating account...' : 'Signing in...') 
+                : (isSignUp ? 'Create account' : 'Sign in')
+              }
+            </Button>
+          </form>
+
+          <div className="mt-4">
+            <Separator />
+            <div className="text-center text-sm text-muted-foreground mt-4">
+              {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+              <a 
+                href={isSignUp ? '/login' : '/register'} 
+                className="text-medical-red hover:underline font-medium"
+              >
+                {isSignUp ? 'Sign in' : 'Sign up'}
+              </a>
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            {isSignUp ? 'Create Account' : 'Welcome Back'}
-          </h1>
-          {selectedRole && (
-            <p className="text-muted-foreground">
-              {isSignUp ? 'Complete your' : 'Sign in to your'} {
-                roles.find(r => r.id === selectedRole)?.title.toLowerCase()
-              } account
-            </p>
-          )}
-        </div>
-
-        <Card className="shadow-medical border-0">
-          <CardContent className="p-6">
-            {isSignUp ? (
-              <SignUp 
-                appearance={{
-                  elements: {
-                    formButtonPrimary: 'bg-primary hover:bg-primary/90',
-                    card: 'shadow-none border-0',
-                    headerTitle: 'hidden',
-                    headerSubtitle: 'hidden'
-                  }
-                }}
-                afterSignUpUrl={`/profile-setup?role=${selectedRole}`}
-                fallbackRedirectUrl={`/profile-setup?role=${selectedRole}`}
-              />
-            ) : (
-              <SignIn 
-                appearance={{
-                  elements: {
-                    formButtonPrimary: 'bg-primary hover:bg-primary/90',
-                    card: 'shadow-none border-0',
-                    headerTitle: 'hidden',
-                    headerSubtitle: 'hidden'
-                  }
-                }}
-                fallbackRedirectUrl="/dashboard"
-              />
-            )}
-          </CardContent>
-        </Card>
-
-        {showRoleSelection && isSignUp && (
-          <div className="mt-6 text-center">
-            <Button 
-              variant="ghost" 
-              onClick={() => {
-                setShowRoleSelection(false)
-                setSelectedRole(null)
-              }}
-            >
-              ← Change Role
-            </Button>
-          </div>
-        )}
-
-        <div className="text-center mt-6">
-          <p className="text-muted-foreground">
-            {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-            <a 
-              href={isSignUp ? '/login' : '/register'} 
-              className="text-primary hover:underline font-medium"
-            >
-              {isSignUp ? 'Sign in' : 'Create one'}
-            </a>
-          </p>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
-  )
+  );
 }
-
-export default AuthPage

@@ -112,7 +112,10 @@ const RecipientDashboard: React.FC = () => {
 
       setDonations(prev => ({
         ...prev,
-        [requestId]: (data || []) as Donation[]
+        [requestId]: (data || []).map(donation => ({
+          ...donation,
+          profiles: undefined // Remove the problematic profiles property
+        })) as Donation[]
       }));
     } catch (error) {
       console.error('Error fetching donations:', error);

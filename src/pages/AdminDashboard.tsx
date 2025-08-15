@@ -92,7 +92,10 @@ const AdminDashboard: React.FC = () => {
       if (requestsError) throw requestsError;
 
       setProfiles((profilesData || []) as Profile[]);
-      setBloodRequests((requestsData || []) as BloodRequest[]);
+      setBloodRequests((requestsData || []).map(request => ({
+        ...request,
+        profiles: undefined // Remove the problematic profiles property
+      })) as BloodRequest[]);
 
       // Calculate stats
       const totalUsers = profilesData?.length || 0;
