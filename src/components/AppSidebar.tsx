@@ -1,4 +1,4 @@
-import { Heart, Users, FileText, Info, Phone, Settings, Home, LayoutDashboard } from "lucide-react";
+import { Heart, Users, FileText, Info, Phone, Settings, Home, LayoutDashboard, Building2, Siren, Star, Apple, Calendar } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -19,6 +19,10 @@ const publicItems = [
   { title: "Home", url: "/", icon: Home },
   { title: "About", url: "/about", icon: Info },
   { title: "Contact", url: "/contact", icon: Phone },
+  { title: "Blood Banks", url: "/blood-banks", icon: Building2 },
+  { title: "Emergency Requests", url: "/emergency-requests", icon: Siren },
+  { title: "Success Stories", url: "/success-stories", icon: Star },
+  { title: "Health Tips", url: "/health-tips", icon: Apple },
 ];
 
 const dashboardItems = [

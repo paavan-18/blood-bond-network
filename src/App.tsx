@@ -14,6 +14,10 @@ import RecipientDashboard from "./pages/RecipientDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import BloodBanks from "./pages/BloodBanks";
+import EmergencyRequests from "./pages/EmergencyRequests";
+import SuccessStories from "./pages/SuccessStories";
+import HealthTips from "./pages/HealthTips";
 import NotFound from "./pages/NotFound";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -33,6 +37,10 @@ const App = () => (
               <Route path="/" element={<LandingPage />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/blood-banks" element={<BloodBanks />} />
+              <Route path="/emergency-requests" element={<EmergencyRequests />} />
+              <Route path="/success-stories" element={<SuccessStories />} />
+              <Route path="/health-tips" element={<HealthTips />} />
               <Route path="/login" element={<AuthPage isSignUp={false} />} />
               <Route path="/register" element={<AuthPage isSignUp={true} />} />
               
