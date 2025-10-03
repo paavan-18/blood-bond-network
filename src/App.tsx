@@ -12,6 +12,10 @@ import ProfileSetup from "./pages/ProfileSetup";
 import DonorDashboard from "./pages/DonorDashboard";
 import RecipientDashboard from "./pages/RecipientDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import Analytics from "@/pages/Analytics";
+import DonationHistory from "@/pages/DonationHistory";
+import RequestMatching from "@/pages/RequestMatching";
+import Notifications from "@/pages/Notifications";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import BloodBanks from "./pages/BloodBanks";
@@ -45,6 +49,30 @@ const App = () => (
               <Route path="/register" element={<AuthPage isSignUp={true} />} />
               
               {/* Protected routes */}
+              <Route path="/analytics" element={
+                <ProtectedRoute>
+                  <Analytics />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/donation-history" element={
+                <ProtectedRoute>
+                  <DonationHistory />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/request-matching" element={
+                <ProtectedRoute>
+                  <RequestMatching />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/notifications" element={
+                <ProtectedRoute>
+                  <Notifications />
+                </ProtectedRoute>
+              } />
+              
               <Route path="/profile-setup" element={
                 <ProtectedRoute>
                   <ProfileSetup />

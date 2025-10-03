@@ -1,4 +1,4 @@
-import { Heart, Users, FileText, Info, Phone, Settings, Home, LayoutDashboard, Building2, Siren, Star, Apple, Calendar } from "lucide-react";
+import { Heart, Users, FileText, Info, Phone, Settings, Home, LayoutDashboard, Building2, Siren, Star, Apple, Calendar, Activity, AlertCircle, MessageCircle, Bell } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -27,6 +27,10 @@ const publicItems = [
 
 const dashboardItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Analytics", url: "/analytics", icon: Activity },
+  { title: "Donation History", url: "/donation-history", icon: Heart },
+  { title: "Request Matching", url: "/request-matching", icon: AlertCircle },
+  { title: "Notifications", url: "/notifications", icon: Bell },
   { title: "Profile Setup", url: "/profile-setup", icon: Settings },
 ];
 
